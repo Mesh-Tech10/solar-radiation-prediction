@@ -541,9 +541,9 @@ bibtex
 }
 ```
 # Contact
-Author: Meshwa patel
-Email: mpatel7@laurentian.ca
-LinkedIn: linkedin.com/in/meshwaa
+Author: Meshwa patel\
+Email: mpatel7@laurentian.ca\
+LinkedIn: linkedin.com/in/meshwaa\
 Research Gate: researchgate.net/profile/yourprofile
 
 # Acknowledgments

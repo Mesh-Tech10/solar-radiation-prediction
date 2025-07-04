@@ -1,0 +1,53 @@
+# vercel.json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ],
+  "env": {
+    "OPENWEATHER_API_KEY": "@openweather_api_key"
+  },
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 30
+    }
+  }
+}
+
+# requirements.txt
+flask==2.3.3
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
+xgboost==1.7.6
+joblib==1.3.2
+requests==2.31.0
+flask-cors==4.0.0
+
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+.DS_Store
+.vercel
+node_modules/
+
+# .vercelignore (optional - things to not deploy)
+.git/
+*.pyc
+__pycache__/
+.env
+README.md

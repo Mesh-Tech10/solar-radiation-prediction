@@ -142,7 +142,7 @@ solar-radiation-prediction/
 - Hour of Day: Diurnal patterns
 - Clear Sky Index: Atmospheric clearness
 - Temperature Range: Daily temperature variation
-- 
+  
 ## Target Variable
 - Global Horizontal Irradiance (GHI): Solar radiation on horizontal surface (W/m²)
 

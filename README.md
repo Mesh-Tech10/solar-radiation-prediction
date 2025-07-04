@@ -526,20 +526,6 @@ deployment
 # License
 MIT License - see LICENSE file for details
 
-# Citation
-If you use this work in your research, please cite:
-```
-bibtex
-@article{solar_prediction_2023,
-  title={Advanced Machine Learning for Solar Radiation Prediction},
-  author={Your Name},
-  journal={IEEE Transactions on Sustainable Energy},
-  year={2023},
-  volume={14},
-  number={3},
-  pages={1234-1245}
-}
-```
 # Contact
 Author: Meshwa patel\
 Email: mpatel7@laurentian.ca\

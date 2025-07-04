@@ -1,9 +1,9 @@
 """
-Solar Radiation Prediction App - Lightweight Version for Vercel
-==============================================================
+Solar Radiation Prediction App - Pure Python Version
+===================================================
+No external dependencies except Flask and requests
 """
 from flask import Flask, jsonify, request, render_template_string
-from flask_cors import CORS
 import requests
 from datetime import datetime
 import math
@@ -11,7 +11,6 @@ import random
 import os
 
 app = Flask(__name__)
-CORS(app)
 
 def get_location_name(lat, lng):
     """Get location name using reverse geocoding"""
@@ -69,8 +68,30 @@ def get_weather_data(lat, lng):
         except Exception as e:
             print(f"Weather API error: {e}")
     
-    # Fallback to enhanced synthetic data
+    # Fallback to synthetic data
     return generate_synthetic_weather(lat, lng)
+
+def normal_random(mean=0, std=1):
+    """Generate normal random number using Box-Muller transform"""
+    # Simple normal distribution approximation
+    u1 = random.random()
+    u2 = random.random()
+    z = math.sqrt(-2 * math.log(u1)) * math.cos(2 * math.pi * u2)
+    return mean + z * std
+
+def exponential_random(rate=1):
+    """Generate exponential random number"""
+    return -math.log(random.random()) / rate
+
+def beta_random(alpha=2, beta=3):
+    """Simple beta distribution approximation"""
+    # Using rejection sampling - simplified
+    for _ in range(100):  # max attempts
+        x = random.random()
+        y = random.random()
+        if y <= x**(alpha-1) * (1-x)**(beta-1):
+            return x
+    return 0.5  # fallback
 
 def generate_synthetic_weather(lat, lng):
     """Generate realistic weather data based on location and time"""
@@ -84,14 +105,14 @@ def generate_synthetic_weather(lat, lng):
     
     # Daily temperature variation
     daily_variation = 8 * math.sin((hour - 6) * math.pi / 12)
-    temperature = base_temp + daily_variation + random.normalvariate(0, 3)
+    temperature = base_temp + daily_variation + normal_random(0, 3)
     
     # Other weather parameters with realistic ranges
-    humidity = max(20, min(90, 60 + random.normalvariate(0, 15)))
-    pressure = 1013 + random.normalvariate(0, 10)
-    wind_speed = max(0, random.expovariate(1/8))
-    cloud_cover = max(0, min(100, random.betavariate(2, 3) * 100))
-    visibility = max(5, min(25, 15 + random.normalvariate(0, 5)))
+    humidity = max(20, min(90, 60 + normal_random(0, 15)))
+    pressure = 1013 + normal_random(0, 10)
+    wind_speed = max(0, exponential_random(1/8))
+    cloud_cover = max(0, min(100, beta_random(2, 3) * 100))
+    visibility = max(5, min(25, 15 + normal_random(0, 5)))
     
     # Weather description based on conditions
     if cloud_cover < 20:
@@ -157,10 +178,10 @@ def calculate_solar_radiation(weather_data, lat, lng):
         # Enhanced model predictions with realistic variations
         # Each model has different characteristics and biases
         predictions = {
-            'Random Forest': int(max(50, base_radiation * random.normalvariate(0.95, 0.08))),
-            'XGBoost': int(max(50, base_radiation * random.normalvariate(1.15, 0.06))),  # Tends higher
-            'SVM': int(max(50, base_radiation * random.normalvariate(0.88, 0.10))),      # More conservative
-            'Ensemble': int(max(50, base_radiation * random.normalvariate(1.10, 0.04)))  # Best performance
+            'Random Forest': int(max(50, base_radiation * normal_random(0.95, 0.08))),
+            'XGBoost': int(max(50, base_radiation * normal_random(1.15, 0.06))),  # Tends higher
+            'SVM': int(max(50, base_radiation * normal_random(0.88, 0.10))),      # More conservative
+            'Ensemble': int(max(50, base_radiation * normal_random(1.10, 0.04)))  # Best performance
         }
         
         # Ensure predictions are customer-appealing but realistic
@@ -256,10 +277,6 @@ def index():
                 align-items: start;
             }
             
-            .map-section {
-                position: relative;
-            }
-            
             #map {
                 height: 500px;
                 border-radius: 15px;
@@ -323,11 +340,6 @@ def index():
                 box-shadow: 0 8px 16px rgba(108,92,231,0.3);
             }
             
-            .location-info h3 {
-                margin-bottom: 5px;
-                font-size: 1.3em;
-            }
-            
             .solar-card {
                 background: linear-gradient(135deg, #ff9a56 0%, #ffad56 100%);
                 color: white;
@@ -356,28 +368,6 @@ def index():
                 text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
             
-            .solar-unit {
-                font-size: 1.0em;
-                opacity: 0.9;
-                margin-bottom: 10px;
-            }
-            
-            .condition-badge {
-                background: rgba(255,255,255,0.2);
-                padding: 8px 16px;
-                border-radius: 20px;
-                margin: 10px 0;
-                display: inline-block;
-            }
-            
-            .models-section h4 {
-                color: #2c3e50;
-                margin-bottom: 15px;
-                font-size: 1.2em;
-                border-bottom: 2px solid #ecf0f1;
-                padding-bottom: 8px;
-            }
-            
             .models-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -401,30 +391,12 @@ def index():
                 border-color: #3498db;
             }
             
-            .model-name {
-                font-weight: bold;
-                color: #2c3e50;
-                margin-bottom: 8px;
-                font-size: 0.95em;
-            }
-            
-            .model-value {
-                font-size: 1.4em;
-                color: #e67e22;
-                font-weight: bold;
-            }
-            
             .weather-info {
                 background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
                 color: white;
                 padding: 20px;
                 border-radius: 12px;
                 box-shadow: 0 8px 16px rgba(116,185,255,0.3);
-            }
-            
-            .weather-info h4 {
-                margin-bottom: 15px;
-                font-size: 1.2em;
             }
             
             .weather-grid {
@@ -439,14 +411,6 @@ def index():
                 padding: 8px 12px;
                 border-radius: 8px;
                 font-size: 0.9em;
-            }
-            
-            .data-source {
-                text-align: center;
-                font-size: 0.85em;
-                opacity: 0.9;
-                margin-top: 10px;
-                font-style: italic;
             }
             
             .loading {
@@ -475,19 +439,15 @@ def index():
                 .content {
                     grid-template-columns: 1fr;
                 }
-                
                 .models-grid {
                     grid-template-columns: 1fr;
                 }
-                
                 .weather-grid {
                     grid-template-columns: 1fr;
                 }
-                
                 h1 {
                     font-size: 2em;
                 }
-                
                 .container {
                     padding: 20px;
                 }
@@ -500,16 +460,16 @@ def index():
                 <h1>🌞 Solar Radiation Prediction System</h1>
                 <p class="subtitle">Advanced AI-powered solar energy forecasting</p>
                 <div class="status-badge">
-                    <i class="fas fa-robot"></i> 4 ML Models Ready
+                    <i class="fas fa-robot"></i> 4 AI Models Ready
                 </div>
             </div>
             
             <div class="content">
-                <div class="map-section">
+                <div>
                     <div id="map"></div>
                     <div class="map-instructions">
                         <i class="fas fa-hand-pointer"></i>
-                        <strong>Click anywhere on the map</strong> to get instant solar predictions for that location
+                        <strong>Click anywhere on the map</strong> to get instant solar predictions
                     </div>
                 </div>
                 
@@ -518,7 +478,7 @@ def index():
                         <h3><i class="fas fa-map-marker-alt"></i> Select a Location</h3>
                         <p>Click on any location worldwide to get instant solar radiation predictions using our advanced AI models.</p>
                         <br>
-                        <div style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 10px; margin-top: 20px;">
+                        <div style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 10px;">
                             <strong><i class="fas fa-check-circle" style="color: #2ecc71;"></i> System Status:</strong>
                             <ul style="margin: 10px 0; padding-left: 20px; text-align: left;">
                                 <li>✅ Random Forest Model</li>
@@ -533,10 +493,7 @@ def index():
         </div>
 
         <script>
-            // Initialize map centered on Toronto
             const map = L.map('map').setView([43.6532, -79.3832], 6);
-            
-            // Add tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 18
@@ -544,20 +501,16 @@ def index():
             
             let currentMarker = null;
             
-            // Handle map clicks
             map.on('click', function(e) {
                 const lat = e.latlng.lat;
                 const lng = e.latlng.lng;
                 
-                // Remove previous marker
                 if (currentMarker) {
                     map.removeLayer(currentMarker);
                 }
                 
-                // Add new marker with custom icon
                 currentMarker = L.marker([lat, lng]).addTo(map);
                 
-                // Show loading animation
                 document.getElementById('results').innerHTML = `
                     <div class="loading">
                         <div class="spinner"></div>
@@ -568,135 +521,68 @@ def index():
                     </div>
                 `;
                 
-                // Make prediction request
                 fetch('/predict', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        latitude: lat,
-                        longitude: lng
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({latitude: lat, longitude: lng})
                 })
                 .then(response => response.json())
                 .then(data => {
-                    displayResults(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                    const predictions = data.predictions;
+                    const bestValue = Math.max(...Object.values(predictions));
+                    const bestModel = Object.keys(predictions).find(key => predictions[key] === bestValue);
+                    
+                    let condition;
+                    if (bestValue > 700) condition = 'Excellent Conditions';
+                    else if (bestValue > 500) condition = 'Very Good Conditions';
+                    else if (bestValue > 300) condition = 'Good Conditions';
+                    else if (bestValue > 100) condition = 'Moderate Conditions';
+                    else condition = 'Low Solar Conditions';
+                    
                     document.getElementById('results').innerHTML = `
-                        <div class="status">
-                            <h3><i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i> Connection Error</h3>
-                            <p>Unable to fetch prediction data. Please check your internet connection and try again.</p>
-                        </div>
-                    `;
-                });
-            });
-            
-            function displayResults(data) {
-                if (data.error) {
-                    document.getElementById('results').innerHTML = `
-                        <div class="status">
-                            <h3><i class="fas fa-times-circle" style="color: #e74c3c;"></i> Error</h3>
-                            <p>${data.error}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Find best prediction
-                const predictions = data.predictions;
-                const bestValue = Math.max(...Object.values(predictions));
-                const bestModel = Object.keys(predictions).find(key => predictions[key] === bestValue);
-                
-                // Determine condition and color
-                let condition, conditionColor;
-                if (bestValue > 700) {
-                    condition = 'Excellent Conditions';
-                    conditionColor = '#2ecc71';
-                } else if (bestValue > 500) {
-                    condition = 'Very Good Conditions';
-                    conditionColor = '#27ae60';
-                } else if (bestValue > 300) {
-                    condition = 'Good Conditions';
-                    conditionColor = '#f39c12';
-                } else if (bestValue > 100) {
-                    condition = 'Moderate Conditions';
-                    conditionColor = '#e67e22';
-                } else {
-                    condition = 'Low Solar Conditions';
-                    conditionColor = '#e74c3c';
-                }
-                
-                const resultsHTML = `
-                    <div class="results">
-                        <div class="location-info">
-                            <h3><i class="fas fa-map-marker-alt"></i> ${data.location}</h3>
-                            <p style="opacity: 0.9; font-size: 0.9em;">${data.coordinates || 'Coordinates: ' + data.latitude + ', ' + data.longitude}</p>
-                        </div>
-                        
-                        <div class="solar-card">
-                            <h3><i class="fas fa-sun"></i> Solar Radiation Forecast</h3>
-                            <div class="solar-value">${bestValue}</div>
-                            <div class="solar-unit">W/m²</div>
-                            <div class="condition-badge" style="background-color: ${conditionColor};">
-                                ${condition}
+                        <div class="results">
+                            <div class="location-info">
+                                <h3><i class="fas fa-map-marker-alt"></i> \${data.location}</h3>
                             </div>
-                            <div style="margin-top: 10px; font-size: 0.9em; opacity: 0.9;">
-                                <i class="fas fa-trophy"></i> Best Model: ${bestModel}
+                            
+                            <div class="solar-card">
+                                <h3><i class="fas fa-sun"></i> Solar Radiation Forecast</h3>
+                                <div class="solar-value">\${bestValue} W/m²</div>
+                                <div>\${condition}</div>
+                                <div style="margin-top: 10px; font-size: 0.9em;">
+                                    <i class="fas fa-trophy"></i> Best Model: \${bestModel}
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="models-section">
+                            
                             <h4><i class="fas fa-robot"></i> AI Model Predictions</h4>
                             <div class="models-grid">
-                                ${Object.entries(predictions).map(([model, value]) => `
-                                    <div class="model-card ${model === bestModel ? 'best-model' : ''}">
-                                        <div class="model-name">${model}</div>
-                                        <div class="model-value">${value} <span style="font-size: 0.7em;">W/m²</span></div>
+                                \${Object.entries(predictions).map(([model, value]) => `
+                                    <div class="model-card">
+                                        <div style="font-weight: bold; color: #2c3e50;">\${model}</div>
+                                        <div style="font-size: 1.4em; color: #e67e22; font-weight: bold;">\${value} W/m²</div>
                                     </div>
                                 `).join('')}
                             </div>
-                        </div>
-                        
-                        <div class="weather-info">
-                            <h4><i class="fas fa-cloud-sun"></i> Weather Conditions</h4>
-                            <div class="weather-grid">
-                                <div class="weather-item">
-                                    <i class="fas fa-thermometer-half"></i> Temperature<br>
-                                    <strong>${data.weather.temperature.toFixed(1)}°C</strong>
+                            
+                            <div class="weather-info">
+                                <h4><i class="fas fa-cloud-sun"></i> Weather Conditions</h4>
+                                <div class="weather-grid">
+                                    <div class="weather-item">Temperature: \${data.weather.temperature.toFixed(1)}°C</div>
+                                    <div class="weather-item">Humidity: \${data.weather.humidity.toFixed(0)}%</div>
+                                    <div class="weather-item">Cloud Cover: \${data.weather.cloud_cover.toFixed(1)}%</div>
+                                    <div class="weather-item">Wind: \${data.weather.wind_speed.toFixed(1)} km/h</div>
                                 </div>
-                                <div class="weather-item">
-                                    <i class="fas fa-tint"></i> Humidity<br>
-                                    <strong>${data.weather.humidity.toFixed(0)}%</strong>
-                                </div>
-                                <div class="weather-item">
-                                    <i class="fas fa-cloud"></i> Cloud Cover<br>
-                                    <strong>${data.weather.cloud_cover.toFixed(1)}%</strong>
-                                </div>
-                                <div class="weather-item">
-                                    <i class="fas fa-wind"></i> Wind Speed<br>
-                                    <strong>${data.weather.wind_speed.toFixed(1)} km/h</strong>
-                                </div>
-                                <div class="weather-item">
-                                    <i class="fas fa-compress-arrows-alt"></i> Pressure<br>
-                                    <strong>${data.weather.pressure.toFixed(1)} hPa</strong>
-                                </div>
-                                <div class="weather-item">
-                                    <i class="fas fa-eye"></i> Visibility<br>
-                                    <strong>${data.weather.visibility.toFixed(1)} km</strong>
+                                <div style="text-align: center; font-size: 0.85em; margin-top: 10px; opacity: 0.9;">
+                                    \${data.weather.data_source}
                                 </div>
                             </div>
-                            <div class="data-source">
-                                <i class="fas fa-database"></i> ${data.weather.data_source}
-                            </div>
                         </div>
-                    </div>
-                `;
-                
-                document.getElementById('results').innerHTML = resultsHTML;
-            }
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('results').innerHTML = '<div class="status"><h3>❌ Error</h3><p>Failed to get prediction. Please try again.</p></div>';
+                });
+            });
         </script>
     </body>
     </html>
@@ -715,13 +601,8 @@ def predict():
         # Normalize longitude to [-180, 180]
         lng = ((lng + 180) % 360) - 180
         
-        # Get location name
         location = get_location_name(lat, lng)
-        
-        # Get weather data
         weather_data = get_weather_data(lat, lng)
-        
-        # Calculate solar radiation predictions
         predictions = calculate_solar_radiation(weather_data, lat, lng)
         
         return jsonify({
@@ -731,14 +612,6 @@ def predict():
             'weather': weather_data,
             'predictions': predictions,
             'timestamp': datetime.now().isoformat()
-    })
-
-# Export the Flask app for Vercel
-if __name__ == '__main__':
-    app.run(debug=True)
-
-# This is required for Vercel deployment
-app = appformat()
         })
         
     except Exception as e:
@@ -753,20 +626,11 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'service': 'Solar Prediction API',
-        'timestamp': datetime.now().isoformat(),
-        'version': '2.0'
+        'timestamp': datetime.now().isoformat()
     })
 
-@app.route('/api/status')
-def api_status():
-    """API status endpoint"""
-    return jsonify({
-        'status': 'operational',
-        'models_available': ['Random Forest', 'XGBoost', 'SVM', 'Ensemble'],
-        'features': [
-            'Real-time weather integration',
-            'Global location support', 
-            'Mathematical solar calculations',
-            'Multi-model predictions'
-        ],
-        'timestamp': datetime.now().iso
+# Export the Flask app for Vercel
+if __name__ == '__main__':
+    app.run(debug=True)
+
+app = app

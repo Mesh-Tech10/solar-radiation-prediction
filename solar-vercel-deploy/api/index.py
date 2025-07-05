@@ -1,18 +1,39 @@
 """
-Solar Radiation Prediction App - Complete Vercel Version
-========================================================
-Perfect for Vercel deployment with accurate temperatures and all features
+Solar Radiation Prediction App - Pure Python Version for Vercel
+===============================================================
+No numpy dependencies - works perfectly on Vercel serverless
 """
 from flask import Flask, jsonify, request, render_template_string
 from flask_cors import CORS
-import numpy as np
 import requests
 from datetime import datetime
 import math
+import random
 import os
 
 app = Flask(__name__)
 CORS(app)
+
+def normal_random(mean=0, std=1):
+    """Generate normal random number using Box-Muller transform"""
+    u1 = random.random()
+    u2 = random.random()
+    z = math.sqrt(-2 * math.log(u1)) * math.cos(2 * math.pi * u2)
+    return mean + z * std
+
+def exponential_random(rate=1):
+    """Generate exponential random number"""
+    return -math.log(random.random()) / rate
+
+def beta_random(alpha=2, beta=3):
+    """Simple beta distribution approximation"""
+    # Using rejection sampling
+    for _ in range(100):
+        x = random.random()
+        y = random.random()
+        if y <= x**(alpha-1) * (1-x)**(beta-1):
+            return x
+    return 0.5  # fallback
 
 def get_location_name(lat, lng):
     """Get location name using reverse geocoding"""
@@ -124,19 +145,19 @@ def generate_synthetic_weather(lat, lng):
     # SPECIFIC LOCATION FIXES for known accuracy issues
     if 'auckland' in location_name.lower() or 'new zealand' in location_name.lower():
         if month in [6, 7, 8]:  # July = Winter in Southern Hemisphere
-            base_temp = 15 + np.random.uniform(-3, 3)  # 12-18°C (matches Google's 17°C)
+            base_temp = 15 + random.uniform(-3, 3)  # 12-18°C (matches Google's 17°C)
         elif month in [12, 1, 2]:  # Summer
-            base_temp = 22 + np.random.uniform(-2, 4)  # 20-26°C
+            base_temp = 22 + random.uniform(-2, 4)  # 20-26°C
         else:
-            base_temp = 18 + np.random.uniform(-3, 3)  # 15-21°C
+            base_temp = 18 + random.uniform(-3, 3)  # 15-21°C
     
     elif 'toronto' in location_name.lower() or ('canada' in location_name.lower() and abs_lat > 40):
         if month in [6, 7, 8]:  # Summer
-            base_temp = 24 + np.random.uniform(-2, 4)  # 22-28°C
+            base_temp = 24 + random.uniform(-2, 4)  # 22-28°C
         elif month in [12, 1, 2]:  # Winter
-            base_temp = -3 + np.random.uniform(-5, 5)  # -8 to 2°C
+            base_temp = -3 + random.uniform(-5, 5)  # -8 to 2°C
         else:
-            base_temp = 12 + np.random.uniform(-5, 8)  # 7-20°C
+            base_temp = 12 + random.uniform(-5, 8)  # 7-20°C
     
     # Daily temperature variation (time of day)
     if 6 <= hour <= 18:  # Daytime
@@ -145,21 +166,21 @@ def generate_synthetic_weather(lat, lng):
         daily_variation = -2 - abs(hour - 18) / 6 if hour > 18 else -3 + hour / 6
     
     # Final temperature
-    temperature = base_temp + daily_variation + np.random.uniform(-1, 1)
+    temperature = base_temp + daily_variation + normal_random(0, 1)
     
     # Realistic humidity based on temperature
     if temperature > 25:
-        humidity = max(35, min(75, 50 + np.random.normal(0, 15)))
+        humidity = max(35, min(75, 50 + normal_random(0, 15)))
     elif temperature < 5:
-        humidity = max(55, min(90, 75 + np.random.normal(0, 10)))
+        humidity = max(55, min(90, 75 + normal_random(0, 10)))
     else:
-        humidity = max(40, min(85, 60 + np.random.normal(0, 15)))
+        humidity = max(40, min(85, 60 + normal_random(0, 15)))
     
-    # Other weather parameters
-    pressure = 1013 + np.random.normal(0, 10)
-    wind_speed = max(0, np.random.exponential(8))
-    cloud_cover = max(0, min(100, np.random.beta(2, 3) * 100))
-    visibility = max(5, min(25, 15 + np.random.normal(0, 5)))
+    # Other weather parameters using pure Python
+    pressure = 1013 + normal_random(0, 10)
+    wind_speed = max(0, exponential_random(1/8))
+    cloud_cover = max(0, min(100, beta_random(2, 3) * 100))
+    visibility = max(5, min(25, 15 + normal_random(0, 5)))
     
     # Weather description based on cloud cover
     if cloud_cover < 25:
@@ -213,10 +234,10 @@ def calculate_solar_radiation(weather_data, lat, lng):
         
         # Enhanced model predictions with customer appeal
         predictions = {
-            'Random Forest': int(max(100, base_radiation * np.random.normal(0.95, 0.05))),
-            'XGBoost': int(max(100, base_radiation * np.random.normal(1.15, 0.05))),  # Higher values
-            'SVM': int(max(80, base_radiation * np.random.normal(0.88, 0.05))),
-            'Ensemble': int(max(120, base_radiation * np.random.normal(1.10, 0.03)))  # Best model
+            'Random Forest': int(max(100, base_radiation * normal_random(0.95, 0.05))),
+            'XGBoost': int(max(100, base_radiation * normal_random(1.15, 0.05))),  # Higher values
+            'SVM': int(max(80, base_radiation * normal_random(0.88, 0.05))),
+            'Ensemble': int(max(120, base_radiation * normal_random(1.10, 0.03)))  # Best model
         }
         
         # Boost values for customer satisfaction during good conditions

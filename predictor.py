@@ -79,7 +79,7 @@ class SolarPredictor:
         if longitude is None:
             longitude = config.DEFAULT_LONGITUDE
         
-        if config.WEATHER_API_KEY == "your_api_key_here":
+        if config.WEATHER_API_KEY == "32136073cec9811a5b96bf05fadd3bce":
             print("Warning: Please set your API key in config.py")
             return None
         

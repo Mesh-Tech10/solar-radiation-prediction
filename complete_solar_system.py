@@ -71,7 +71,7 @@ class CompleteSolarPredictionSystem:
         # Visibility: Atmospheric visibility (km)
         data['visibility'] = np.maximum(1, 20 - 0.1 * data['cloud_cover'] + 3 * np.random.randn(n_samples))
         
-        # UV Index: Ultraviolet radiation index
+        # UV Index: UV radiation index
         data['uv_index'] = np.maximum(0, 
             8 * np.maximum(0, np.sin(2 * np.pi * (data.index.hour - 6) / 12)) * 
             (1 - data['cloud_cover'] / 100) + np.random.randn(n_samples))

@@ -134,7 +134,7 @@ solar-radiation-prediction/
 - Wind Direction: Wind direction (degrees)
 - Cloud Cover: Cloud coverage percentage
 - Visibility: Atmospheric visibility (km)
-- UV Index: Ultraviolet radiation index
+- UV Index: UV radiation index
   
 ## Derived Features
 - Solar Zenith Angle: Sun's position calculation

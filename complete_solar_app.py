@@ -1726,3 +1726,13 @@ if __name__ == '__main__':
         print("   Run: python final_target_matching_solar.py")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
+
+    @app.route('/health')
+    def health_check():
+        """Health check endpoint for Railway"""
+        return jsonify({
+             'status': 'healthy',
+             'service': 'Solar Prediction API',
+             'models_loaded': len(predictor.models),
+             'timestamp': datetime.now().isoformat()
+     })

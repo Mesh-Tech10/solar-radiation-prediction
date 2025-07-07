@@ -12,26 +12,4 @@
   }
 }
 
-# nixpacks.toml
-[phases.setup]
-nixPkgs = ["python311"]
 
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
-cmds = ["python -c 'print(\"Build complete\")'"]
-
-[start]
-cmd = "gunicorn complete_solar_app:app --host=0.0.0.0 --port=$PORT"
-
-# Add this health check endpoint to your complete_solar_app.py
-@app.route('/health')
-def health_check():
-    """Health check endpoint for Railway"""
-    return jsonify({
-        'status': 'healthy',
-        'service': 'Solar Prediction API',
-        'models_loaded': len(predictor.models),
-        'timestamp': datetime.now().isoformat()
-    })

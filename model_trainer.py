@@ -1,6 +1,5 @@
 """
-This file trains a machine learning model to predict solar radiation
-based on weather conditions.
+This file trains a machine learning model to predict solar radiation based on weather conditions.
 """
 
 import pandas as pd

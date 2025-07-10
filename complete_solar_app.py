@@ -113,8 +113,7 @@ class SolarPredictionSystem:
 predictor = SolarPredictionSystem()
 
 def get_weather_data(lat, lng, api_key=None):
-    """Get REAL weather data from OpenWeatherMap API to match Google weather"""
-    
+       
     # Try multiple API key sources
     if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
         api_key = os.environ.get('OPENWEATHER_API_KEY')
@@ -123,7 +122,6 @@ def get_weather_data(lat, lng, api_key=None):
     # IMPORTANT: Get your own free key from https://openweathermap.org/api
     if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
         print("⚠️ No API key found. Using synthetic data.")
-        print("🔑 Get free API key from: https://openweathermap.org/api")
         print("💡 Set environment variable: OPENWEATHER_API_KEY=32136073cec9811a5b96bf05fadd3bce")
         return generate_synthetic_weather(lat, lng)
     
@@ -1697,14 +1695,6 @@ if __name__ == '__main__':
     api_key = os.environ.get('OPENWEATHER_API_KEY')
     if not api_key:
         print("🔑 NO WEATHER API KEY FOUND!")
-        print("📝 To get REAL weather data (like Google shows):")
-        print("   1. Go to: https://openweathermap.org/api")
-        print("   2. Click 'Sign Up' (it's FREE)")
-        print("   3. Get your API key")
-        print("   4. Set environment variable:")
-        print("      Windows: set OPENWEATHER_API_KEY=your_key_here")
-        print("      Mac/Linux: export OPENWEATHER_API_KEY=your_key_here")
-        print("   5. Restart this app")
         print("📊 Currently using synthetic weather data")
         print("-" * 70)
     else:

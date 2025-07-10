@@ -1,6 +1,5 @@
 """
 This file creates sample weather and solar data for training our model.
-In a real project, you'd get this data from weather stations and solar panels.
 """
 
 import pandas as pd

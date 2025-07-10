@@ -289,18 +289,18 @@ class RealisticSolarSystem:
             'Ensemble': {'rmse': 82.1, 'mae': 57.2, 'r2': 0.912, 'mape': 10.9}
         }
         
-        print(f"{'Model':<15} {'Your RMSE':<10} {'Target':<8} {'Diff':<8} {'Your R²':<8} {'Target R²':<8}")
+        print(f"{'Model':<15} {'my RMSE':<10} {'Target':<8} {'Diff':<8} {'my R²':<8} {'Target R²':<8}")
         print("-" * 70)
         
         for model in results.keys():
-            your_rmse = results[model]['rmse']
+            my_rmse = results[model]['rmse']
             target_rmse = targets[model]['rmse']
-            diff = your_rmse - target_rmse
-            your_r2 = results[model]['r2']
+            diff = my_rmse - target_rmse
+            my_r2 = results[model]['r2']
             target_r2 = targets[model]['r2']
             
             status = "✅" if abs(diff) < 15 else "⚠️"
-            print(f"{model:<15} {your_rmse:<10.1f} {target_rmse:<8.1f} {diff:<8.1f} {your_r2:<8.3f} {target_r2:<8.3f} {status}")
+            print(f"{model:<15} {my_rmse:<10.1f} {target_rmse:<8.1f} {diff:<8.1f} {my_r2:<8.3f} {target_r2:<8.3f} {status}")
     
     def run_realistic_pipeline(self):
         """Run realistic pipeline matching document performance"""

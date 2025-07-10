@@ -86,7 +86,6 @@ predictor = SolarPredictionSystem()
 def get_weather_data(lat, lng, api_key=None):
     """Get real weather data from OpenWeatherMap API"""
     
-    # Try to get API key from environment or use placeholder
     if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
         api_key = os.environ.get('OPENWEATHER_API_KEY')
     
@@ -968,8 +967,8 @@ if __name__ == '__main__':
     print("🔗 Open your browser and go to: http://localhost:5000")
     print("🗺️ Click anywhere on the map to get solar predictions")
     print("🔍 Use the search box to find specific locations")
-    print("💡 Add your OpenWeatherMap API key for real weather data")
-    print("🤖 Uses your trained ML models for predictions")
+    print("💡 Add my OpenWeatherMap API key for real weather data")
+    print("🤖 Uses my trained ML models for predictions")
     print("=" * 70)
     
     # Check if models are available

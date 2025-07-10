@@ -1,20 +1,5 @@
 """
 Interactive Map-Based Solar Radiation Prediction Web App
-========================================================
-
-This web application allows users to:
-1. Click anywhere on an interactive world map
-2. Automatically fetch real-time weather data for that location
-3. Get solar radiation predictions using the trained AI model
-4. View results with location information and weather details
-
-Features:
-- Interactive Leaflet map with click functionality
-- Real-time weather API integration
-- Automatic coordinate detection
-- Beautiful responsive design
-- Error handling and fallback options
-- Location search functionality
 """
 
 from flask import Flask, render_template, request, jsonify

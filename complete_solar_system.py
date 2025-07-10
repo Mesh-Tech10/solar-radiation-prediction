@@ -1,6 +1,6 @@
 """
 Complete Solar Radiation Prediction System
-All models from your document (except LSTM - we'll add that later)
+All models from my document (except LSTM - I'll add that later)
 """
 
 import numpy as np
@@ -18,7 +18,7 @@ import os
 from datetime import datetime
 
 class CompleteSolarPredictionSystem:
-    """Complete implementation matching your thesis document"""
+    """Complete implementation matching my thesis document"""
     
     def __init__(self, random_state=42):
         self.random_state = random_state
@@ -27,11 +27,11 @@ class CompleteSolarPredictionSystem:
         self.performance_metrics = {}
         
         print("🌞 Complete Solar Radiation Prediction System")
-        print("Implementing all models from your thesis document")
+        print("Implementing all models from my thesis document")
         print("=" * 60)
         
     def generate_thesis_quality_data(self, n_samples=8760):
-        """Generate high-quality data matching your thesis"""
+        """Generate high-quality data matching my thesis"""
         print("🧪 Generating thesis-quality solar radiation dataset...")
         print(f"📊 Creating {n_samples} samples (full year of hourly data)")
         
@@ -41,7 +41,7 @@ class CompleteSolarPredictionSystem:
         dates = pd.date_range(start='2023-01-01', periods=n_samples, freq='H')
         data = pd.DataFrame(index=dates)
         
-        # Primary Features (exactly from your document)
+        # Primary Features (exactly from my document)
         print("   📋 Creating primary features...")
         
         # Temperature: Ambient temperature (°C)
@@ -76,7 +76,7 @@ class CompleteSolarPredictionSystem:
             8 * np.maximum(0, np.sin(2 * np.pi * (data.index.hour - 6) / 12)) * 
             (1 - data['cloud_cover'] / 100) + np.random.randn(n_samples))
         
-        # Derived Features (exactly from your document)
+        # Derived Features (exactly from my document)
         print("   📋 Creating derived features...")
         
         # Solar Zenith Angle: Sun's position calculation
@@ -132,7 +132,7 @@ class CompleteSolarPredictionSystem:
         return data
     
     def prepare_features(self, data):
-        """Prepare feature matrix exactly as in your document"""
+        """Prepare feature matrix exactly as in document"""
         print("🔧 Preparing features for model training...")
         
         # Feature columns (excluding target)
@@ -178,7 +178,7 @@ class CompleteSolarPredictionSystem:
         """Train Random Forest with exact hyperparameter tuning from document"""
         print("\n🌲 Training Random Forest with Hyperparameter Tuning...")
         
-        # Exact parameter grid from your document
+        # Exact parameter grid from my document
         param_grid = {
             'n_estimators': [100, 200, 300],
             'max_depth': [10, 20, None],
@@ -223,7 +223,7 @@ class CompleteSolarPredictionSystem:
         """Train XGBoost with exact parameters from document"""
         print("\n🚀 Training XGBoost Model...")
         
-        # Exact parameters from your document
+        # Exact parameters from my document
         xgb_model = xgb.XGBRegressor(
             n_estimators=200,
             learning_rate=0.1,
@@ -264,7 +264,7 @@ class CompleteSolarPredictionSystem:
         X_train_scaled = scaler.fit_transform(X_train)
         X_val_scaled = scaler.transform(X_val)
         
-        # Exact parameters from your document
+        # Exact parameters from my document
         svm_model = SVR(kernel='rbf', C=100, gamma=0.1)
         svm_model.fit(X_train_scaled, y_train)
         
@@ -290,14 +290,14 @@ class CompleteSolarPredictionSystem:
         return svm_model
     
     def train_ensemble_model(self, X_train, y_train, X_val, y_val):
-        """Train ensemble exactly as in your document"""
+        """Train ensemble exactly as in my document"""
         print("\n🎭 Training Ensemble Model...")
         
         # Create ensemble of multiple models (exact from document)
         ensemble_model = VotingRegressor([
             ('rf', self.models['Random Forest']),
             ('xgb', self.models['XGBoost']),
-            # Note: SVM needs scaling so we'll skip it from voting ensemble
+            # Note: SVM needs scaling so i'll skip it from voting ensemble
         ])
         
         ensemble_model.fit(X_train, y_train)
@@ -357,7 +357,7 @@ class CompleteSolarPredictionSystem:
         return test_results
     
     def create_performance_comparison(self, test_results):
-        """Create performance comparison exactly like your document table"""
+        """Create performance comparison exactly like my document table"""
         print("📋 Model Performance Comparison (Final Results)")
         print("=" * 70)
         
@@ -406,7 +406,7 @@ class CompleteSolarPredictionSystem:
     def run_complete_pipeline(self):
         """Run the complete training pipeline"""
         print("🚀 Starting Complete Solar Prediction Training Pipeline")
-        print("Implementing your complete thesis methodology")
+        print("Implementing my complete thesis methodology")
         print("=" * 70)
         
         # Generate data

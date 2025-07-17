@@ -20,7 +20,7 @@ Solar energy prediction is crucial for optimal energy management and grid stabil
 - Weather Data: OpenWeatherMap API, NOAA integration
 - Web Framework: Flask/FastAPI
 - Database: PostgreSQL, InfluxDB (time series)
-- Deployment: Docker, AWS/Azure
+
 
 # Project Structure
 ```

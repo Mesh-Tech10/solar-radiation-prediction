@@ -20,7 +20,7 @@ Solar energy prediction is crucial for optimal energy management and grid stabil
 - Weather Data: OpenWeatherMap API, NOAA integration
 - Web Framework: Flask/FastAPI
 - Database: PostgreSQL, InfluxDB (time series)
-- Deployment: Docker, AWS/Azure
+
 
 # Project Structure
 ```
@@ -463,19 +463,7 @@ spec:
               name: weather-api-secret
               key: api-key
 ```
-# AWS Deployment
-```bash
-# Deploy using AWS CLI
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 
-docker build -t solar-prediction .
-docker tag solar-prediction:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/solar-prediction:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/solar-prediction:latest
-
-# Deploy to ECS
-aws ecs update-service --cluster solar-cluster --service solar-prediction-service --force-new-
-deployment
-```
 # Research Contributions
 ## Novel Contributions
 1. Hybrid CNN-LSTM Architecture: Combines spatial and temporal features

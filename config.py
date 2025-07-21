@@ -86,10 +86,10 @@ predictor = SolarPredictionSystem()
 def get_weather_data(lat, lng, api_key=None):
     """Get real weather data from OpenWeatherMap API"""
     
-    if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
+    if not api_key or api_key == "Enter API Key":
         api_key = os.environ.get('OPENWEATHER_API_KEY')
     
-    if api_key and api_key != "32136073cec9811a5b96bf05fadd3bce":
+    if api_key and api_key != "Enter API Key":
         try:
             url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lng}&appid={api_key}&units=metric"
             response = requests.get(url, timeout=10)
@@ -895,7 +895,7 @@ def predict_location():
         lng = float(data.get('longitude', 0))
         
         # Get weather data
-        api_key = "32136073cec9811a5b96bf05fadd3bce"  # Replace with actual API key or set environment variable
+        api_key = "Enter API Key"  # Replace with actual API key or set environment variable
         weather_data = get_weather_data(lat, lng, api_key)
         
         # Calculate solar features

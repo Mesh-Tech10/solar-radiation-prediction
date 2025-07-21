@@ -115,14 +115,14 @@ predictor = SolarPredictionSystem()
 def get_weather_data(lat, lng, api_key=None):
        
     # Try multiple API key sources
-    if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
+    if not api_key or api_key == "Enter API Key":
         api_key = os.environ.get('OPENWEATHER_API_KEY')
     
     # If you don't have API key yet, use this temporary one for testing
     # IMPORTANT: Get your own free key from https://openweathermap.org/api
-    if not api_key or api_key == "32136073cec9811a5b96bf05fadd3bce":
+    if not api_key or api_key == "Enter API Key":
         print("⚠️ No API key found. Using synthetic data.")
-        print("💡 Set environment variable: OPENWEATHER_API_KEY=32136073cec9811a5b96bf05fadd3bce")
+        print("💡 Set environment variable: OPENWEATHER_API_KEY=Enter API Key")
         return generate_synthetic_weather(lat, lng)
     
     try:
@@ -1609,7 +1609,7 @@ def predict_location():
         print(f"Prediction request for: {lat:.3f}, {lng:.3f}")
         
         # Get weather data
-        api_key = "32136073cec9811a5b96bf05fadd3bce"
+        api_key = "Enter API Key"
         weather_data = get_weather_data(lat, lng, api_key)
         
         print(f"Weather data retrieved for: {weather_data['location']}")
